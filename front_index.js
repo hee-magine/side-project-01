@@ -72,7 +72,7 @@ function botResponse() {
     // const r = random(0, BOT_MSGS.length - 1);
     // const msgText = BOT_MSGS[r];
 
-    fetch("http://localhost:3000", {
+    fetch("https://port-0-side-project-01-5o1j2llgze0cgl.sel4.cloudtype.app/", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
