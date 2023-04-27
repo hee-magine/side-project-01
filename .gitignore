@@ -17,6 +17,7 @@ pids
 
 # 안 올릴거 추가
 apikey.js
+prompt.js
 packages-microsoft-prod.deb
 chatgptfunction/
 gptfunction/

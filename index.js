@@ -3,6 +3,7 @@ import express from "express";
 import bodyParser from "body-parser";
 import cors from "cors";
 import { API_KEY } from "./apikey.js";
+import { PROMPT } from "./prompt.js";
 
 const configuration = new Configuration({
     organization: "org-xctP8O1XB6NLY9K7RK9xnKiM",
@@ -25,12 +26,7 @@ app.post("/", async (req, res) => {
         messages: [
             {
                 role: "system",
-                content:
-                    "Your name is '친절한 상담소 봇'.\
-                You are a kind and helpful psychological counselor.\
-                When the user explains their situation or emotions, you must first show empathy and then continue the conversation.\
-                You should ask the user 3-5 questions about what they are feeling and why.\
-                When asking the user, it is better to ask one question at a time."
+                content: `${PROMPT}`
             },
             ...messages
         ]
@@ -41,8 +37,8 @@ app.post("/", async (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`);
-});
+// app.listen(port, () => {
+//     console.log(`Example app listening at http://localhost:${port}`);
+// });
 
 // messages = [{"role": "system", "content": "You are a kind psychologist."}]
