@@ -13,8 +13,18 @@ const BOT_MSGS = [
 // Icons made by Freepik from www.flaticon.com
 const BOT_IMG = "https://image.flaticon.com/icons/svg/327/327779.svg";
 const PERSON_IMG = "https://image.flaticon.com/icons/svg/145/145867.svg";
-const BOT_NAME = "BOT";
-const PERSON_NAME = "Sajad";
+const BOT_NAME = "심리 상담 봇";
+const PERSON_NAME = "";
+
+let messages = [];
+
+// first message from bot
+appendMessage(
+    BOT_NAME,
+    BOT_IMG,
+    "left",
+    "안녕하세요. 어떤 고민이 있으신가요? 편하게 말씀하세요."
+);
 
 msgerForm.addEventListener("submit", (event) => {
     event.preventDefault();
@@ -26,37 +36,68 @@ msgerForm.addEventListener("submit", (event) => {
     msgerInput.value = "";
 
     botResponse();
+
+    console.log(messages);
 });
 
 function appendMessage(name, img, side, text) {
     //   Simple solution for small apps
     const msgHTML = `
     <div class="msg ${side}-msg">
-      <div class="msg-img" style="background-image: url(${img})"></div>
+        <div class="msg-img" style="background-image: url(${img})"></div>
 
-      <div class="msg-bubble">
+        <div class="msg-bubble">
         <div class="msg-info">
-          <div class="msg-info-name">${name}</div>
-          <div class="msg-info-time">${formatDate(new Date())}</div>
+            <div class="msg-info-name">${name}</div>
+            <div class="msg-info-time">${formatDate(new Date())}</div>
         </div>
 
-        <div class="msg-text">${text}</div>
-      </div>
+        <div class="msg-text" id="user">${text}</div>
+        </div>
     </div>
-  `;
+    `;
+    if (name === BOT_NAME) {
+        const newMessage = { role: "assistant", content: `${text}` };
+        messages.push(newMessage);
+    } else {
+        const newMessage = { role: "user", content: `${text}` };
+        messages.push(newMessage);
+    }
 
     msgerChat.insertAdjacentHTML("beforeend", msgHTML);
     msgerChat.scrollTop += 500;
 }
 
 function botResponse() {
-    const r = random(0, BOT_MSGS.length - 1);
-    const msgText = BOT_MSGS[r];
-    const delay = msgText.split(" ").length * 100;
+    // const r = random(0, BOT_MSGS.length - 1);
+    // const msgText = BOT_MSGS[r];
 
-    setTimeout(() => {
-        appendMessage(BOT_NAME, BOT_IMG, "left", msgText);
-    }, delay);
+    fetch("http://localhost:3000", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            messages
+        })
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            // let newAssistantMessage = {
+            //     role: "assistant",
+            //     content: `${data.completion.content}`
+            // };
+            // messages.push(newAssistantMessage);
+            const delay = data.completion.content.split(" ").length * 100;
+            setTimeout(() => {
+                appendMessage(
+                    BOT_NAME,
+                    BOT_IMG,
+                    "left",
+                    data.completion.content
+                );
+            }, delay);
+        });
 }
 
 // Utils
