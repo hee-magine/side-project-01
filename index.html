@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>캐주얼 심리 상담 챗봇</title>
+    </head>
+    <body>
+        <style>
+            .chat-content {
+                min-height: 800px;
+                overflow-y: scroll;
+                max-width: 700px;
+                margin: 0 auto;
+            }
+            .line {
+                margin-top: 10px;
+                display: flex;
+            }
+            .chat-box {
+                background: #eee;
+                padding: 5px;
+                max-width: 200px;
+            }
+            .mine {
+                margin-left: auto;
+            }
+            .type-send-area {
+                padding: 5px;
+                max-width: 300px;
+                margin: 0 auto;
+            }
+        </style>
+        <h1>심리 상담 챗봇</h1>
+        <div id="chat-log">
+            <!-- <div class="line">
+        <span class="chat-box">안녕?</span>
+      </div>
+      <div class="line">
+        <span class="chat-box mine">안녕!</span>
+      </div> -->
+        </div>
+        <form action="">
+            <input type="text" name="message" id="message" />
+            <button type="submit">전송</button>
+        </form>
+
+        <script>
+            let messages = [];
+            const chatLog = document.getElementById("chat-log");
+            const message = document.getElementById("message");
+            const form = document.querySelector("form");
+            form.addEventListener("submit", (e) => {
+                e.preventDefault();
+                const messageText = message.value;
+                const newMessage = { role: "user", content: `${messageText}` };
+                messages.push(newMessage);
+                message.value = "";
+                const messageElement = document.createElement("div");
+                messageElement.classList.add("message");
+                messageElement.classList.add("message--sent");
+                messageElement.innerHTML = `
+              <div class="message__text">${messageText}</div>
+            `;
+                chatLog.appendChild(messageElement);
+                chatLog.scrollTop = chatLog.scrollHeight;
+                fetch("http://localhost:3000", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        messages
+                    })
+                })
+                    .then((res) => res.json())
+                    .then((data) => {
+                        let newAssistantMessage = {
+                            role: "assistant",
+                            content: `${data.completion.content}`
+                        };
+                        messages.push(newAssistantMessage);
+                        const messageElement = document.createElement("div");
+                        messageElement.classList.add("message");
+                        messageElement.classList.add("message--recieved");
+                        messageElement.innerHTML = `
+              <div class="message__text">${data.completion.content}</div>
+              `;
+                        chatLog.appendChild(messageElement);
+                        chatLog.scrollTop = chatLog.scrollHeight;
+                    });
+            });
+
+            // document.querySelector("#send").addEventListener("click", function () {
+            //   var template = `<div class="line">
+            //   <span class="chat-box mine">${
+            //     document.querySelector("#input").value
+            //   }</span>
+            // </div>`;
+            //   document
+            //     .querySelector(".chat-content")
+            //     .insertAdjacentHTML("beforeend", template);
+
+            //   const configuration = new Configuration({
+            //     apiKey: "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",
+            //   });
+            //   const openai = new OpenAIApi(configuration);
+            //   // const response = await openai.listEngines();
+            //   const completion = await openai.createChatCompletion({
+            //     model: "gpt-3.5-turbo",
+            //     messages: [{role: "user", content: document.querySelector("#input").value}],
+            //   });
+            //   console.log(completion.data.choices[0].message);
+
+            //   openai
+            //     .createCompletion({
+            //       model: "gpt-3.5-turbo",
+            //       prompt: document.querySelector("#input").value,
+            //       temperature: 0.7,
+            //       max_tokens: 256,
+            //       top_p: 1,
+            //       frequency_penalty: 0,
+            //       presence_penalty: 0,
+            //     })
+            //     .then((result) => {
+            //       console.log(result.data.choices[0].text);
+            //       var template = `<div class="line">
+            //     <span class="chat-box">${result.data.choices[0].text}</span>
+            //   </div>`;
+            //       document
+            //         .querySelector(".chat-content")
+            //         .insertAdjacentHTML("beforeend", template);
+            //     });
+
+            //     // assistant_content = completion.choices[0].message["content"].strip()   // 파이썬 코드 참고
+
+            // });
+        </script>
+    </body>
+</html>
