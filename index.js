@@ -37,8 +37,8 @@ app.post("/", async (req, res) => {
     });
 });
 
-app.listen(port, () => {
-    console.log("working!");
-});
+// app.listen(port, () => {
+//     console.log("working!");
+// });
 
 // messages = [{"role": "system", "content": "You are a kind psychologist."}]
