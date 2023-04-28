@@ -72,18 +72,15 @@ function botResponse() {
     // const r = random(0, BOT_MSGS.length - 1);
     // const msgText = BOT_MSGS[r];
 
-    fetch(
-        "https://port-0-node-express-plz-5o1j2llgze0cgl.sel4.cloudtype.app/",
-        {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                messages
-            })
-        }
-    )
+    fetch("https://port-0-test-5o1j2llgze0cgl.sel4.cloudtype.app/", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            messages
+        })
+    })
         .then((res) => res.json())
         .then((data) => {
             // let newAssistantMessage = {
