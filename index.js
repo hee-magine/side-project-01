@@ -1,7 +1,13 @@
-import { Configuration, OpenAIApi } from "openai";
-import express from "express";
-import bodyParser from "body-parser";
-import cors from "cors";
+// import { Configuration, OpenAIApi } from "openai";
+// import express from "express";
+// import bodyParser from "body-parser";
+// import cors from "cors";
+
+const { Configuration, OpenAIApi } = require("openai");
+const express = require("express");
+const bodyParser = require("body-parser");
+const cors = require("cors");
+
 import { API_KEY } from "./apikey.js";
 import { PROMPT } from "./prompt.js";
 
@@ -37,8 +43,8 @@ app.post("/", async (req, res) => {
     });
 });
 
-// app.listen(port, () => {
-//     console.log("working!");
-// });
+app.listen(port, () => {
+    console.log("working!");
+});
 
 // messages = [{"role": "system", "content": "You are a kind psychologist."}]
